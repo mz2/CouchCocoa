@@ -28,7 +28,7 @@
     RESTResource* _parent;
     NSString* _relativePath;
     RESTCache* _owningCache;
-    id<RESTResourceDelegate> _delegate;
+    id<RESTResourceDelegate> __unsafe_unretained _delegate;
     NSMutableSet* _activeOperations;
 
     NSString* _eTag;
@@ -51,13 +51,13 @@
     This resource will become real when it's first PUT, which will behind the scenes actually do a POST to the parent and assign the resource the URL returned in the Location: response header. */
 - (id) initUntitledWithParent: (RESTResource*)parent;
 
-@property (readonly) NSURL* URL;
+@property (weak, readonly) NSURL* URL;
 @property (readonly) RESTResource* parent;
 
 /** The relative path from the parent (as given in the initializer.) */
 @property (readonly) NSString* relativePath;
 
-@property (assign, nonatomic) id<RESTResourceDelegate> delegate;
+@property (unsafe_unretained, nonatomic) id<RESTResourceDelegate> delegate;
 
 /** Sets the login credential (e.g. username/password) to be used for authentication by this resource and its children.
     IMPORTANT: CouchDB's default configuration unfortunately doesn't support this type of programmatic auth. To make it work, you'll need to add a "WWW-Authenticate" property to the server's [httpd] configuration section, as described at <https://groups.google.com/d/msg/mobile-couchbase/GiSnos0Hx54/q5JGepLaQBgJ>. */
@@ -124,7 +124,7 @@
 /** The URL of the last cached response.
     This is associated with the -eTag and -lastModified properties.
     This URL might not be the same as the receiver's -URL property, because "?"-prefixed parameters to a request are added to the URL's query. */
-@property (retain) NSURL* cachedURL;
+@property (strong) NSURL* cachedURL;
 
 #pragma mark TRACKING OPERATIONS:
 

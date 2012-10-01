@@ -46,12 +46,12 @@
 - (id) init;
 
 /** The document this item is associated with. Will be nil if it's new and unsaved. */
-@property (readonly, retain) CouchDocument* document;
+@property (readonly, strong) CouchDocument* document;
 
 /** The database the item's document belongs to.
     Setting this property will assign the item to a database, creating a document.
     Setting it to nil will delete its document from its database. */
-@property (retain) CouchDatabase* database;
+@property (strong) CouchDatabase* database;
 
 /** Is this model new, never before saved? */
 @property (readonly) bool isNew;
@@ -103,7 +103,7 @@
 
 /** The names of all attachments (array of strings).
     This reflects unsaved changes made by creating or deleting attachments. */
-@property (readonly) NSArray* attachmentNames;
+@property (weak, readonly) NSArray* attachmentNames;
 
 /** Looks up the attachment with the given name (without fetching its contents). */
 - (CouchAttachment*) attachmentNamed: (NSString*)name;

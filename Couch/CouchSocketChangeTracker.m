@@ -60,13 +60,14 @@ enum {
     _trackingInput = (NSInputStream*)cfInputStream;
     _trackingOutput = (NSOutputStream*)cfOutputStream;
 #else
+    // local variables needed to appease ARC
+    NSInputStream *trackingInput = _trackingInput;
+    NSOutputStream *trackingOutput = _trackingOutput;
     [NSStream getStreamsToHost: [NSHost hostWithName: _databaseURL.host]
                           port: _databaseURL.port.intValue ?: 80
-                   inputStream: &_trackingInput outputStream: &_trackingOutput];
+                   inputStream: &trackingInput outputStream: &trackingOutput];
     if (!_trackingOutput)
         return NO;
-    [_trackingInput retain];
-    [_trackingOutput retain];
 #endif
     
     _state = kStateStatus;
@@ -86,16 +87,12 @@ enum {
 - (void) stop {
     COUCHLOG2(@"%@: stop", self);
     [_trackingInput close];
-    [_trackingInput release];
     _trackingInput = nil;
     
     [_trackingOutput close];
-    [_trackingOutput release];
     _trackingOutput = nil;
     
-    [_trackingRequest release];
     _trackingRequest = nil;
-    [_inputBuffer release];
     _inputBuffer = nil;
     
     [super stop];
@@ -108,9 +105,9 @@ enum {
     if (!crlf)
         return NO;  // Wait till we have a complete line
     ptrdiff_t lineLength = crlf - start;
-    NSString* line = [[[NSString alloc] initWithBytes: start
+    NSString* line = [[NSString alloc] initWithBytes: start
                                                length: lineLength
-                                             encoding: NSUTF8StringEncoding] autorelease];
+                                             encoding: NSUTF8StringEncoding];
     COUCHLOG3(@"%@: LINE: \"%@\"", self, line);
     if (line) {
         switch (_state) {
@@ -183,7 +180,6 @@ enum {
                 NSAssert(written == strlen(buffer), @"Output stream didn't write entire request");
                 // FIX: It's unlikely but possible that the stream won't take the entire request; need to
                 // write the rest later.
-                [_trackingRequest release];
                 _trackingRequest = nil;
             }
             break;

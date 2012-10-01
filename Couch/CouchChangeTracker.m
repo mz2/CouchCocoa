@@ -34,7 +34,6 @@
     self = [super init];
     if (self) {
         if ([self class] == [CouchChangeTracker class]) {
-            [self release];
             if (mode == kContinuous && [databaseURL.scheme.lowercaseString hasPrefix: @"http"]) {
                 return (id) [[CouchSocketChangeTracker alloc] initWithDatabaseURL: databaseURL
                                                                              mode: mode
@@ -48,7 +47,7 @@
             }
         }
     
-        _databaseURL = [databaseURL retain];
+        _databaseURL = databaseURL;
         _client = client;
         _mode = mode;
         _lastSequenceNumber = lastSequence;
@@ -78,8 +77,6 @@
 
 - (void)dealloc {
     [self stop];
-    [_databaseURL release];
-    [super dealloc];
 }
 
 - (NSURLCredential*) authCredential {
@@ -114,8 +111,7 @@
 }
 
 - (void) receivedChunk: (NSData*)chunk {
-    NSString* line = [[[NSString alloc] initWithData: chunk encoding:NSUTF8StringEncoding]
-                      autorelease];
+    NSString* line = [[NSString alloc] initWithData: chunk encoding:NSUTF8StringEncoding];
     if (!line) {
         Warn(@"Couldn't parse UTF-8 from _changes");
         return;

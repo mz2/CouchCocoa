@@ -40,12 +40,11 @@ NSString* const kCouchDocumentChangeNotification = @"CouchDocumentChange";
 }
 
 - (void)dealloc {
+    
+    assert(!_modelObject);
+    
     if (_modelObject)
         Warn(@"Deallocing %@ while it still has a modelObject %@", self, _modelObject);
-    [_currentRevisionID release];
-    [_currentRevision release];
-    [_documentID release];
-    [super dealloc];
 }
 
 
@@ -57,7 +56,7 @@ NSString* const kCouchDocumentChangeNotification = @"CouchDocumentChange";
 
 
 - (NSString*) abbreviatedID {
-    NSMutableString* abbrev = [[self.documentID mutableCopy] autorelease];
+    NSMutableString* abbrev = [self.documentID mutableCopy];
     if (abbrev.length > 10)
         [abbrev replaceCharactersInRange: NSMakeRange(4, abbrev.length - 8) withString: @".."];
     return abbrev;
@@ -82,9 +81,7 @@ NSString* const kCouchDocumentChangeNotification = @"CouchDocumentChange";
 - (void) setCurrentRevisionID:(NSString *)revisionID {
     NSParameterAssert(revisionID);
     if (![revisionID isEqualToString: _currentRevisionID]) {
-        [_currentRevisionID autorelease];
         _currentRevisionID = [revisionID copy];
-        [_currentRevision autorelease];
         _currentRevision = nil;
     }
 }
@@ -94,7 +91,7 @@ NSString* const kCouchDocumentChangeNotification = @"CouchDocumentChange";
     NSParameterAssert(revisionID);
     if ([revisionID isEqualToString: _currentRevisionID])
         return self.currentRevision;
-    return [[[CouchRevision alloc] initWithDocument: self revisionID: revisionID] autorelease];
+    return [[CouchRevision alloc] initWithDocument: self revisionID: revisionID];
 }
 
 
@@ -331,7 +328,7 @@ NSString* const kCouchDocumentChangeNotification = @"CouchDocumentChange";
         NSString* revision = _currentRevisionID;
         if (revision) {
             // Add a ?rev= query param with the current document revision:
-            NSMutableDictionary* nuParams = [[parameters mutableCopy] autorelease];
+            NSMutableDictionary* nuParams = [parameters mutableCopy];
             if (!nuParams)
                 nuParams = [NSMutableDictionary dictionary];
             [nuParams setObject: revision forKey: @"?rev"];
@@ -432,7 +429,7 @@ NSString* const kCouchDocumentChangeNotification = @"CouchDocumentChange";
             [self.database documentAssignedID: self];
         }
         if (![properties objectForKey: @"_id"]) {
-            NSMutableDictionary* nuProperties = [[properties mutableCopy] autorelease];
+            NSMutableDictionary* nuProperties = [properties mutableCopy];
             [nuProperties setObject: docID forKey: @"_id"];
             properties = nuProperties;
         }

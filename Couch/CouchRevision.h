@@ -26,13 +26,13 @@
 }
 
 /** The document this is a revision of. */
-@property (readonly) CouchDocument* document;
+@property (weak, readonly) CouchDocument* document;
 
 /** The document's ID. */
-@property (readonly) NSString* documentID;
+@property (weak, readonly) NSString* documentID;
 
 /** The ID of this revision. */
-@property (readonly) NSString* revisionID;
+@property (weak, readonly) NSString* revisionID;
 
 /** Is this the current/latest revision of its document? */
 @property (readonly) BOOL isCurrent;
@@ -70,7 +70,7 @@
 #pragma mark ATTACHMENTS
 
 /** The names of all attachments (array of strings). */
-@property (readonly) NSArray* attachmentNames;
+@property (weak, readonly) NSArray* attachmentNames;
 
 /** Looks up the attachment with the given name (without fetching its contents). */
 - (CouchAttachment*) attachmentNamed: (NSString*)name;

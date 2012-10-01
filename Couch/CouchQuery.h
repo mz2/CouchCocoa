@@ -42,7 +42,7 @@ typedef enum {
 }
 
 /** The design document that contains this view. */
-@property (readonly) CouchDesignDocument* designDocument;
+@property (weak, readonly) CouchDesignDocument* designDocument;
 
 /** The maximum number of rows to return. Default value is 0, meaning 'unlimited'. */
 @property NSUInteger limit;
@@ -91,7 +91,7 @@ typedef enum {
 
 /** If non-nil, the error of the last execution of the query.
     If nil, the last exexution of the query was successful */
-@property (readonly,retain) NSError* error;
+@property (readonly,strong) NSError* error;
 
 /** Starts an asynchronous query of the CouchDB view.
     When complete, the operation's resultObject will be the CouchQueryEnumerator. */
@@ -121,7 +121,7 @@ typedef enum {
 }
 
 /** In CouchLiveQuery the -rows accessor is now a non-blocking property that can be observed using KVO. Its value will be nil until the initial query finishes. */
-@property (readonly, retain) CouchQueryEnumerator* rows;
+@property (readonly, strong) CouchQueryEnumerator* rows;
 
 /** When the live query first starts, .rows will return nil until the initial results come back.
     This call will block until the results are ready. Subsequent calls do nothing. */
@@ -167,28 +167,28 @@ typedef enum {
     id _result;
 }
 
-@property (readonly) id key;
-@property (readonly) id value;
+@property (unsafe_unretained, readonly) id key;
+@property (unsafe_unretained, readonly) id value;
 
 /** The ID of the document described by this view row.
     (This is not necessarily the same as the document that caused this row to be emitted; see the discussion of the .sourceDocumentID property for details.) */
-@property (readonly) NSString* documentID;
+@property (weak, readonly) NSString* documentID;
 
 /** The ID of the document that caused this view row to be emitted.
     This is the value of the "id" property of the JSON view row.
     It will be the same as the .documentID property, unless the map function caused a related document to be linked by adding an "_id" key to the emitted value; in this case .documentID will refer to the linked document, while sourceDocumentID always refers to the original document. */
-@property (readonly) NSString* sourceDocumentID;
+@property (weak, readonly) NSString* sourceDocumentID;
 
 /** The revision ID of the document this row was mapped from. */
-@property (readonly) NSString* documentRevision;
+@property (weak, readonly) NSString* documentRevision;
 
 /** The document this row was mapped from.
     This will be nil if a grouping was enabled in the query, because then the result rows don't correspond to individual documents. */
-@property (readonly) CouchDocument* document;
+@property (weak, readonly) CouchDocument* document;
 
 /** The properties of the document this row was mapped from.
     To get this, you must have set the -prefetch property on the query; else this will be nil. */
-@property (readonly) NSDictionary* documentProperties;
+@property (weak, readonly) NSDictionary* documentProperties;
 
 /** If this row's key is an array, returns the item at that index in the array.
     If the key is not an array, index=0 will return the key itself.
@@ -196,7 +196,7 @@ typedef enum {
 - (id) keyAtIndex: (NSUInteger)index;
 
 /** Convenience for use in keypaths. Returns the key at the given index. */
-@property (readonly) id key0, key1, key2, key3;
+@property (unsafe_unretained, readonly) id key0, key1, key2, key3;
 
 /** The local sequence number of the associated doc/revision.
     Valid only if the 'sequences' and 'prefetch' properties were set in the query; otherwise returns 0. */

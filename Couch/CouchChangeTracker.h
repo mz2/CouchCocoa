@@ -49,7 +49,7 @@ typedef enum CouchChangeTrackerMode {
                    client: (id<CouchChangeTrackerClient>)client;
 
 @property (readonly, nonatomic) NSURL* databaseURL;
-@property (readonly, nonatomic) NSString* databaseName;
+@property (weak, readonly, nonatomic) NSString* databaseName;
 @property (readonly, nonatomic) CouchChangeTrackerMode mode;
 @property (readonly, nonatomic) NSUInteger lastSequenceNumber;
 
@@ -57,9 +57,9 @@ typedef enum CouchChangeTrackerMode {
 - (void) stop;
 
 // Protected
-@property (readonly) NSURLCredential* authCredential;
-@property (readonly) NSURL* changesFeedURL;
-@property (readonly) NSString* changesFeedPath;
+@property (weak, readonly) NSURLCredential* authCredential;
+@property (weak, readonly) NSURL* changesFeedURL;
+@property (weak, readonly) NSString* changesFeedPath;
 - (void) receivedChunk: (NSData*)chunk;
 - (BOOL) receivedPollResponse: (NSData*)body;
 - (void) stopped; // override this

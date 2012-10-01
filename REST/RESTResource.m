@@ -31,7 +31,7 @@
     NSParameterAssert(url);
     self = [super init];
     if (self) {
-        _url = [url retain];
+        _url = url;
     }
     return self;
 }
@@ -40,7 +40,7 @@
     NSParameterAssert(parent);
     self = [super init];
     if (self) {
-        _parent = [parent retain];
+        _parent = parent;
     }
     return self;
 }
@@ -57,16 +57,6 @@
 - (void) dealloc
 {
     [_owningCache resourceBeingDealloced: self];
-    [_activeOperations release];
-    [_credential release];
-    [_protectionSpace release];
-    [_eTag release];
-    [_lastModified release];
-    [_url release];
-    [_cachedURL release];
-    [_relativePath release];
-    [_parent release];
-    [super dealloc];
 }
 
 
@@ -99,8 +89,7 @@
 - (void) setURL: (NSURL*)url {
     NSParameterAssert(url);
     NSAssert(!_parent, @"Can only change URL of root");
-    [_url autorelease];
-    _url = [url retain];
+    _url = url;
 }
 
 
@@ -112,9 +101,12 @@
 
 
 - (void) callDelegate: (SEL)selector forResource: (RESTResource*)resource withObject: (id)object {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     if ([_delegate respondsToSelector: selector])
         [(id)_delegate performSelector: selector withObject: resource withObject: object];
     [_parent callDelegate: selector forResource: resource withObject: object];
+#pragma clang diagnostic pop
 }
 
 
@@ -153,7 +145,7 @@
                                                                           (CFStringRef)value,
                                                                           NULL, (CFStringRef)@"&",
                                                                           kCFStringEncodingUTF8);
-            [queries appendString: (id)escaped];
+            [queries appendString: (__bridge NSString *)escaped];
             CFRelease(escaped);
         } else {
             [request setValue: value forHTTPHeaderField: key];
@@ -180,7 +172,7 @@
 
 - (RESTOperation*) sendRequest: (NSMutableURLRequest*)request {
     [self callDelegate: @selector(resource:willSendRequest:) forResource: self withObject: request];
-    return [[[RESTOperation alloc] initWithResource: self request: request] autorelease];
+    return [[RESTOperation alloc] initWithResource: self request: request];
 }
 
 
@@ -221,7 +213,7 @@
         if (locationURL) {
             [self assignedRelativePath: [locationURL lastPathComponent]];
             if (![self.URL isEqual: locationURL])
-                _url = [locationURL retain];
+                _url = locationURL;
         }
     }
 }
@@ -256,7 +248,7 @@ static NSDictionary* addJSONType(NSDictionary* parameters) {
     NSMutableDictionary* moreParams = parameters ? [parameters mutableCopy]
                                                  : [[NSMutableDictionary alloc] init];
     [moreParams setObject: @"application/json" forKey: @"Content-Type"];
-    return [moreParams autorelease];
+    return moreParams;
 }
 
 
@@ -317,7 +309,6 @@ static NSDictionary* addJSONType(NSDictionary* parameters) {
     if (tracks && !_activeOperations)
         _activeOperations = [[NSMutableSet alloc] init];
     else if (!tracks && _activeOperations) {
-        [_activeOperations release];
         _activeOperations = nil;
     }
 }
@@ -360,8 +351,7 @@ static NSDictionary* addJSONType(NSDictionary* parameters) {
 
 
 - (void) setCredential:(NSURLCredential *)credential {
-    [_credential autorelease];
-    _credential = [credential retain];
+    _credential = credential;
 }
 
 
@@ -370,8 +360,7 @@ static NSDictionary* addJSONType(NSDictionary* parameters) {
 }
 
 - (void) setProtectionSpace: (NSURLProtectionSpace*)protectionSpace {
-    [_protectionSpace autorelease];
-    _protectionSpace = [protectionSpace retain];
+    _protectionSpace = protectionSpace;
 }
 
 - (NSURLProtectionSpace*) protectionSpaceForOperation: (RESTOperation*)op {

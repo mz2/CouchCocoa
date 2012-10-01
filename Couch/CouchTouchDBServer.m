@@ -75,7 +75,7 @@
         if (_touchServer)
             [classTDURLProtocol setServer: _touchServer];
         else
-            _error = [error retain];
+            _error = error;
     }
     return self;
 }
@@ -109,9 +109,8 @@
     if (self) {
         _touchServer = server;
         if (!server)
-            _error = [error retain];
+            _error = error;
     } else {
-        [server release];
     }
     return self;
 }
@@ -132,8 +131,6 @@
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self close];
-    [_error release];
-    [super dealloc];
 }
 
 
@@ -159,7 +156,6 @@
 - (void) close {
     [super close];
     [_touchServer close];
-    [_touchServer release];
     _touchServer = nil;
 }
 

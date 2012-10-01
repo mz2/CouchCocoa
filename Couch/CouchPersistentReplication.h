@@ -33,10 +33,10 @@ typedef enum {
 }
 
 /** The local database being replicated to/from. */
-@property (readonly) CouchDatabase* localDatabase;
+@property (weak, readonly) CouchDatabase* localDatabase;
 
 /** The remote database being replicated to/from. */
-@property (readonly) NSURL* remoteURL;
+@property (weak, readonly) NSURL* remoteURL;
 
 /** Does the replication pull from (as opposed to push to) the target? */
 @property (nonatomic, readonly) bool pull;
@@ -90,7 +90,7 @@ typedef enum {
 /** The total number of changes to be processed, if the task is active, else 0 (observable). */
 @property (nonatomic, readonly) unsigned total;
 
-@property (nonatomic, readonly, retain) NSError* error;
+@property (nonatomic, readonly, strong) NSError* error;
 
 @property (nonatomic, readonly) CouchReplicationMode mode;
 

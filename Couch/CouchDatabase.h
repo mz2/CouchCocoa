@@ -45,7 +45,7 @@ typedef NSString* (^CouchDocumentPathMap)(NSString* documentID);
 + (CouchDatabase*) databaseNamed: (NSString*)databaseName
                  onServerWithURL: (NSURL*)serverURL;
 
-@property (readonly) CouchServer* server;
+@property (weak, readonly) CouchServer* server;
 
 /** Allows retrieving documents from the CouchDatabase using a different path from the documentID. This is useful for
     accessing a document using a Couch rewrite. The result of the CouchDocumentPathMap is the path relative to the database. */
@@ -171,7 +171,7 @@ typedef NSString* (^CouchDocumentPathMap)(NSString* documentID);
 - (CouchPersistentReplication*) replicationToDatabaseAtURL: (NSURL*)targetURL;
 
 /** All currently configured persistent replications involving this database, as CouchPersistentReplication objects. */
-@property (readonly) NSArray* replications;
+@property (weak, readonly) NSArray* replications;
 
 @end
 

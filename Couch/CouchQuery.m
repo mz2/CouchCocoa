@@ -33,7 +33,7 @@
 
 
 @interface CouchQuery ()
-@property (readwrite,retain) NSError *error;
+@property (readwrite,strong) NSError *error;
 @end
 
 
@@ -60,16 +60,6 @@
 }
 
 
-- (void) dealloc
-{
-    [_startKey release];
-    [_endKey release];
-    [_startKeyDocID release];
-    [_endKeyDocID release];
-    [_keys release];
-    [_error release];
-    [super dealloc];
-}
 
 
 @synthesize limit=_limit, skip=_skip, descending=_descending, startKey=_startKey, endKey=_endKey,
@@ -159,8 +149,8 @@
         NSArray* rows = $castIf(NSArray, [result objectForKey: @"rows"]);
         if (rows) {
             [self cacheResponse: op];
-            op.resultObject = [[[CouchQueryEnumerator alloc] initWithDatabase: self.database
-                                                                       result: result] autorelease];
+            op.resultObject = [[CouchQueryEnumerator alloc] initWithDatabase: self.database
+                                                                       result: result];
         } else {
             Warn(@"Couldn't parse rows from CouchDB view response");
             self.error = [RESTOperation errorWithHTTPStatus: 502 
@@ -173,7 +163,7 @@
 
 
 - (CouchLiveQuery*) asLiveQuery {
-    return [[[CouchLiveQuery alloc] initWithQuery: self] autorelease];
+    return [[CouchLiveQuery alloc] initWithQuery: self];
 }
 
 
@@ -203,11 +193,6 @@
 }
 
 
-- (void) dealloc
-{
-    [_viewDefinition release];
-    [super dealloc];
-}
 
 
 - (NSDictionary*) jsonToPost {
@@ -223,9 +208,6 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver: self];
-    [_op release];
-    [_rows release];
-    [super dealloc];
 }
 
 
@@ -233,13 +215,12 @@
     if (!_observing)
         [self start];
     // Have to return a copy because the enumeration has to start at item #0 every time
-    return [[_rows copy] autorelease];
+    return [_rows copy];
 }
 
 
 - (void) setRows:(CouchQueryEnumerator *)rows {
-    [_rows autorelease];
-    _rows = [rows retain];
+    _rows = rows;
 }
 
 
@@ -254,7 +235,7 @@
                                                        object: self.database];
         }
         COUCHLOG(@"CouchLiveQuery: Starting...");
-        _op = [[super start] retain];
+        _op = [super start];
         [_op start];
     }
     return _op;
@@ -276,7 +257,6 @@
 
     if (op == _op) {
         COUCHLOG(@"CouchLiveQuery: ...Finished (status=%i)", op.httpStatus);
-        [_op release];
         _op = nil;
         CouchQueryEnumerator* rows = op.resultObject;
         if (rows && ![rows isEqual: _rows]) {
@@ -316,11 +296,10 @@
     self = [super init];
     if (self ) {
         if (!rows) {
-            [self release];
             return nil;
         }
         _database = database;
-        _rows = [rows retain];
+        _rows = rows;
         _totalCount = totalCount;
         _sequenceNumber = sequenceNumber;
     }
@@ -342,11 +321,6 @@
 }
 
 
-- (void) dealloc
-{
-    [_rows release];
-    [super dealloc];
-}
 
 
 - (BOOL) isEqual:(id)object {
@@ -365,9 +339,8 @@
 
 
 - (CouchQueryRow*) rowAtIndex: (NSUInteger)index {
-    return [[[CouchQueryRow alloc] initWithDatabase: _database
-                                             result: [_rows objectAtIndex:index]]
-            autorelease];
+    return [[CouchQueryRow alloc] initWithDatabase: _database
+                                             result: [_rows objectAtIndex:index]];
 }
 
 
@@ -396,20 +369,15 @@
     if (self) {
         if (![result isKindOfClass: [NSDictionary class]]) {
             Warn(@"Unexpected row value in view results: %@", result);
-            [self release];
             return nil;
         }
         _database = database;
-        _result = [result retain];
+        _result = result;
     }
     return self;
 }
 
 
-- (void)dealloc {
-    [_result release];
-    [super dealloc];
-}
 
 
 - (id) key                              {return [_result objectForKey: @"key"];}

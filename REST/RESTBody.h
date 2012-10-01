@@ -46,7 +46,7 @@
 @property (readonly, copy) NSDictionary* headers;
 
 /** The owning RESTResource. */
-@property (readonly, retain) RESTResource* resource;
+@property (readonly, strong) RESTResource* resource;
 
 /** The value of the Content-Type: header. */
 @property (readonly, copy) NSString* contentType;
@@ -58,11 +58,11 @@
 @property (readonly, copy) NSString* lastModified;
 
 /** Content parsed as string. */
-@property (readonly) NSString* asString;
+@property (weak, readonly) NSString* asString;
 
 /** Parses the content as JSON and returns the result.
     This value is cached, so subsequent calls are cheap. */
-@property (readonly) id fromJSON;
+@property (unsafe_unretained, readonly) id fromJSON;
 
 @end
 
@@ -74,7 +74,7 @@
 @property (readwrite, copy) NSDictionary* headers;
 @property (readwrite, copy) NSMutableDictionary* mutableHeaders;
 @property (readwrite, copy) NSString* contentType;
-@property (readwrite, retain) RESTResource* resource;
+@property (readwrite, strong) RESTResource* resource;
 
 @end
 

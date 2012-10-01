@@ -82,8 +82,6 @@ enum {
             [[tddb existingViewNamed: viewName] deleteView];
         }
     }];
-    [mapBlock release];
-    [reduceBlock release];
 }
 
 
@@ -95,7 +93,6 @@ enum {
     [self tellTDDatabase: ^(TDDatabase* tddb) {
         [tddb defineFilter: filterName asBlock: filterBlock];
     }];
-    [filterBlock release];
 }
 
 
@@ -104,7 +101,6 @@ enum {
     [self tellTDDatabase: ^(TDDatabase* tddb) {
         [tddb defineValidation: self.relativePath asBlock: validateBlock];
     }];
-    [validateBlock release];
 }
 
 

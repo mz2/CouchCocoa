@@ -64,7 +64,7 @@
 
 /** The list of active server tasks, as parsed JSON (observable).
     This is updated asynchronously while the activityPollInterval is nonzero. */
-@property (nonatomic, readonly, retain) NSArray* activeTasks;
+@property (nonatomic, readonly, strong) NSArray* activeTasks;
 
 - (void) checkActiveTasks;
 
@@ -75,7 +75,7 @@
 
 /** All currently defined CouchPersistentReplications (as stored in the replicator database.)
     To create a replication, use the methods on CouchDatabase. */
-@property (readonly) NSArray* replications;
+@property (weak, readonly) NSArray* replications;
 
 @end
 

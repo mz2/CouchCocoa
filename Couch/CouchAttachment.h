@@ -26,16 +26,16 @@
 }
 
 /** The owning document revision. */
-@property (readonly) CouchRevision* revision;
+@property (weak, readonly) CouchRevision* revision;
 
 /** The owning document. */
-@property (readonly) CouchDocument* document;
+@property (weak, readonly) CouchDocument* document;
 
 /** The filename (last URL path component). */
-@property (readonly) NSString* name;
+@property (weak, readonly) NSString* name;
 
 /** The MIME type of the contents. */
-@property (readonly) NSString* contentType;
+@property (weak, readonly) NSString* contentType;
 
 /** The length in bytes of the contents. */
 @property (readonly) UInt64 length;
@@ -49,7 +49,7 @@
 
 /** The attachment's URL without the revision ID.
     This URL will always resolve to the current revision of the attachment. */
-@property (readonly) NSURL* unversionedURL;
+@property (weak, readonly) NSURL* unversionedURL;
 
 /** Asynchronous setter for the body. (Use inherited -GET to get it.) */
 - (RESTOperation*) PUT: (NSData*)body contentType: (NSString*)contentType;

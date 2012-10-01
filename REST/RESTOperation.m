@@ -39,7 +39,7 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
 
 
 @interface RESTOperation ()
-@property (readwrite, retain) NSError* error;
+@property (readwrite, strong) NSError* error;
 @end
 
 
@@ -53,7 +53,7 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
     NSParameterAssert(request != nil);
     self = [super init];
     if (self) {
-        _resource = [resource retain];
+        _resource = resource;
         _request = [request mutableCopy];   // starts out mutable
         _state = kRESTObjectUnloaded;
     }
@@ -62,16 +62,7 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
 
 
 - (void) dealloc {
-    [_resultObject release];
     [_connection cancel];
-    [_connection release];
-    [_request release];
-    [_response release];
-    [_error release];
-    [_resource release];
-    [_onCompletes release];
-    [_body release];
-    [super dealloc];
 }
 
 
@@ -207,7 +198,7 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
 + (BOOL) wait: (NSSet*)operations {
     if (operations.count == 0)
         return YES;
-    operations = [[operations copy] autorelease];   // make sure set doesn't mutate
+    operations = [operations copy];   // make sure set doesn't mutate
     CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
 
     // Mark each active operation as waiting:
@@ -252,7 +243,6 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
             _onCompletes = [[NSMutableArray alloc] init];
         onComplete = [onComplete copy];
         [_onCompletes addObject: onComplete];
-        [onComplete release];
         if (_state == kRESTObjectUnloaded)
             [self start];
         return NO;
@@ -281,15 +271,10 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
         return NO;
     ++_retryCount;
     [_connection cancel];
-    [_connection release];
     _connection = nil;
-    [_error release];
     _error = nil;
-    [_response release];
     _response = nil;
-    [_body release];
     _body = nil;
-    [_resultObject release];
     _resultObject = nil;
     _state = kRESTObjectUnloaded;
     // Don't clear _waiting -- if client was waiting, it's still waiting
@@ -325,7 +310,6 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
     }
     _waiting = NO;
     
-    [_connection release];
     _connection = nil;
     
     _state = error ? kRESTObjectFailed : kRESTObjectReady;
@@ -342,7 +326,7 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
     _state = error ? kRESTObjectFailed : kRESTObjectReady;
     self.error = error;
 
-    NSArray* onCompletes = [_onCompletes autorelease];
+    NSArray* onCompletes = _onCompletes;
     _onCompletes = nil;
     for (OnCompleteBlock onComplete in onCompletes)
         onComplete();
@@ -393,9 +377,9 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
     [self wait]; // block till loaded
     if (!_body)
         return nil;
-    return [[[RESTBody alloc] initWithContent: _body 
+    return [[RESTBody alloc] initWithContent: _body 
                                   headers: [RESTBody entityHeadersFrom: _response.allHeaderFields]
-                                 resource: _resource] autorelease];
+                                 resource: _resource];
 }
 
 
@@ -407,8 +391,7 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
 
 - (void) setResultObject: (id)object {
     if (object != _resultObject) {
-        [_resultObject autorelease];
-        _resultObject = [object retain];
+        _resultObject = object;
     }
 }
 
@@ -419,7 +402,7 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
 
 - (void)connection: (NSURLConnection*)connection didReceiveResponse: (NSURLResponse*)response {
     NSAssert(!_response, @"Got two responses?");
-    _response = (NSHTTPURLResponse*) [response retain];
+    _response = (NSHTTPURLResponse*) response;
     // Don't check for HTTP error status yet; wait till response body is received since it may
     // contain detailed error info from the server.
 }
@@ -504,8 +487,8 @@ RESTLogLevel gRESTLogLevel = kRESTLogNothing;
         if(!credential) {
             NSURLProtectionSpace* acceptableProtectionSpace = [_resource protectionSpaceForOperation:self];
             if(acceptableProtectionSpace) {
-                credential = [[[NSURLCredential alloc] initWithTrust:
-                                            acceptableProtectionSpace.serverTrust] autorelease];
+                credential = [[NSURLCredential alloc] initWithTrust:
+                                            acceptableProtectionSpace.serverTrust];
             }
         }
         if (credential) {

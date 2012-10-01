@@ -22,7 +22,7 @@
 @interface CouchDocument : CouchResource
 {
     @private
-    id _modelObject;
+    id __unsafe_unretained _modelObject;
     BOOL _isDeleted;
     NSString* _currentRevisionID;
     CouchRevision* _currentRevision;
@@ -30,11 +30,11 @@
 }
 
 /** The unique ID of this document; its key in the database. */
-@property (readonly) NSString* documentID;
+@property (weak, readonly) NSString* documentID;
 
 /** The document ID abbreviated to a maximum of 10 characters including ".." in the middle.
     Useful for logging or debugging. */
-@property (readonly) NSString* abbreviatedID;
+@property (weak, readonly) NSString* abbreviatedID;
 
 /** YES if the document has been deleted from the database. */
 @property (readonly) BOOL isDeleted;
@@ -42,7 +42,7 @@
 /** Optional reference to an application-defined model object representing this document.
     This property is unused and uninterpreted by CouchCocoa; use it for whatever you want.
     Note that this is not a strong/retained reference. */
-@property (assign) id modelObject;
+@property (unsafe_unretained) id modelObject;
 
 #pragma mark REVISIONS:
 

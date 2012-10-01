@@ -53,7 +53,7 @@ extern NSString* const kCouchLanguageErlang;
 
 /** Fetches and returns the names of all the views defined in this design document.
     The first call fetches the entire design document synchronously; subsequent calls are cached. */
-@property (readonly) NSArray* viewNames;
+@property (weak, readonly) NSArray* viewNames;
 
 /** Returns the map function of the view with the given name. */
 - (NSString*) mapFunctionOfViewNamed: (NSString*)viewName;
@@ -81,7 +81,7 @@ extern NSString* const kCouchLanguageErlang;
 
 /** The filter functions defined in this design document.
     @return  An NSDictionary whose keys are filter names and values are function source code. */
-@property (readonly) NSDictionary* filters;
+@property (weak, readonly) NSDictionary* filters;
 
 /** Sets the definition of a filter, or deletes it.
     After making changes to one or more filters, you should call -saveChanges to PUT them back to the database.

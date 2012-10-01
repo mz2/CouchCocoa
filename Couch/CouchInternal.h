@@ -78,8 +78,8 @@ typedef void (^OnDatabaseChangeBlock)(CouchDocument*, BOOL externalChange);
 
 
 @interface CouchPersistentReplication ()
-@property (readonly) NSString* sourceURLStr;
-@property (readonly) NSString* targetURLStr;
+@property (weak, readonly) NSString* sourceURLStr;
+@property (weak, readonly) NSString* targetURLStr;
 @end
 
 

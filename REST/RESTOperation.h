@@ -57,11 +57,11 @@ typedef void (^OnCompleteBlock)();
 @property (readonly) RESTResource* resource;
 /** The target URL of this operation. 
     (This is not necessarily the same as the URL of its resource! It's often the same, but it may have query parameters or sub-paths appended to it.) */
-@property (readonly) NSURL* URL;
+@property (weak, readonly) NSURL* URL;
 /** The last component of the URL's path. */
-@property (readonly) NSString* name;
+@property (weak, readonly) NSString* name;
 /** The HTTP method of the request. */
-@property (readonly) NSString* method;
+@property (weak, readonly) NSString* method;
 /** The underlying URL request. */
 @property (readonly) NSURLRequest* request;
 
@@ -119,7 +119,7 @@ typedef void (^OnCompleteBlock)();
 /** If the request has failed, this will be set to an NSError describing what went wrong; else it's nil.
     An HTTP response status of 300 or greater is considered an error and will cause this property to be set.
     This method does not block, but it won't be set to a non-nil value until the operation finishes. */
-@property (readonly, retain) NSError* error;
+@property (readonly, strong) NSError* error;
 
 /** YES if there is no error and the HTTP status is <= 299 (Synchronous.) */
 @property (readonly) BOOL isSuccessful;
@@ -129,10 +129,10 @@ typedef void (^OnCompleteBlock)();
 @property (readonly) int httpStatus;
 
 /** Dictionary of HTTP response headers (Synchronous.) */
-@property (readonly) NSDictionary* responseHeaders;
+@property (weak, readonly) NSDictionary* responseHeaders;
 
 /** The body of the response, with its entity headers (Synchronous.) */
-@property (readonly) RESTBody* responseBody;
+@property (weak, readonly) RESTBody* responseBody;
 
 /** The raw NSHTTPURLResponse object, in case you need it. */
 @property (readonly) NSHTTPURLResponse* response;
@@ -140,7 +140,7 @@ typedef void (^OnCompleteBlock)();
 
 /** Object associated with this response.
     A client can store anything it wants here, typically a value parsed from or represented by the response body; often this property will be set by an onCompletion block. */
-@property (retain) id resultObject;
+@property (strong) id resultObject;
 
 
 /** Debugging utility that returns a sort-of log of the HTTP request and response. */

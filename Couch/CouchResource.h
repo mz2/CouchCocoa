@@ -25,7 +25,7 @@ extern NSString* const kCouchDBErrorDomain;
 @interface CouchResource : RESTResource
 
 /** The owning database. */
-@property (readonly) CouchDatabase* database;
+@property (unsafe_unretained, readonly) CouchDatabase* database;
 
 /** Returns a CouchResource object with the given relative path from the receiver.
     (This will always be an instance of CouchResource, not something more specific like CouchDocument. This is a convenience to reach API endpoints like _bulk_docs or _purge that aren't part of the regular object model. */

@@ -33,10 +33,6 @@
 }
 
 
-- (void)dealloc {
-    [_metadata release];
-    [super dealloc];
-}
 
 
 @synthesize metadata=_metadata;
