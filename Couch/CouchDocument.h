@@ -22,7 +22,7 @@
 @interface CouchDocument : CouchResource
 {
     @private
-    id __unsafe_unretained _modelObject;
+    id __weak _modelObject;
     BOOL _isDeleted;
     NSString* _currentRevisionID;
     CouchRevision* _currentRevision;
@@ -42,7 +42,7 @@
 /** Optional reference to an application-defined model object representing this document.
     This property is unused and uninterpreted by CouchCocoa; use it for whatever you want.
     Note that this is not a strong/retained reference. */
-@property (unsafe_unretained) id modelObject;
+@property (weak) id modelObject;
 
 #pragma mark REVISIONS:
 
