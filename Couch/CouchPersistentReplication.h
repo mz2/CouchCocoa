@@ -39,13 +39,13 @@ typedef enum {
 @property (weak, readonly) NSURL* remoteURL;
 
 /** Does the replication pull from (as opposed to push to) the target? */
-@property (nonatomic, readonly) bool pull;
+@property (nonatomic, readonly) BOOL pull;
 
 /** Should the target database be created if it doesn't already exist? (Defaults to NO). */
-@property bool create_target;
+@property BOOL create_target;
 
 /** Should the replication operate continuously, copying changes as soon as the source database is modified? (Defaults to NO). */
-@property bool continuous;
+@property BOOL continuous;
 
 /** Path of an optional filter function to run on the source server.
     Only documents for which the function returns true are sent to the destination.

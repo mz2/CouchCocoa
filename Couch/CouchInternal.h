@@ -71,7 +71,7 @@ typedef void (^OnDatabaseChangeBlock)(CouchDocument*, BOOL externalChange);
 
 
 @interface CouchReplication ()
-@property (nonatomic, readwrite) bool pull;
+@property (nonatomic, readwrite) BOOL pull;
 - (id) initWithDatabase: (CouchDatabase*)database
                  remote: (NSURL*)remote;
 @end

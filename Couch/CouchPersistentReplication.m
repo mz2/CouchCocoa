@@ -96,7 +96,7 @@ static inline BOOL isLocalDBName(NSString* url) {
 }
 
 
-- (bool) pull {
+- (BOOL) pull {
     return isLocalDBName(self.targetURLStr);
 }
 
