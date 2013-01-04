@@ -200,7 +200,10 @@ typedef enum {
 - (id) keyAtIndex: (NSUInteger)index;
 
 /** Convenience for use in keypaths. Returns the key at the given index. */
-@property (readonly) id key0, key1, key2, key3;
+@property (readonly) id key0;
+@property (readonly) id key1;
+@property (readonly) id key2;
+@property (readonly) id key3;
 
 /** The local sequence number of the associated doc/revision.
     Valid only if the 'sequences' and 'prefetch' properties were set in the query; otherwise returns 0. */
