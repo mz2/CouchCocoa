@@ -83,7 +83,7 @@
 
 - (id) initWithServerPath: (NSString*)serverPath
                   options: (const struct TD_DatabaseManagerOptions*)options
-{
+        customHTTPHeaders: (NSDictionary *)customHTTPHeaders {
     // On Mac OS TouchDB.framework is linked dynamically, so avoid explicit references to its
     // classes because they'd create link errors building CouchCocoa.
     Class classTDURLProtocol = NSClassFromString(@"TDURLProtocol");
@@ -102,6 +102,11 @@
         server = [[classTDServer alloc] initWithDirectory: serverPath
                                                     error: &error];
     }
+    
+    if (customHTTPHeaders) {
+        [server setValue:customHTTPHeaders forKey:@"customHTTPHeaders"];
+    }
+    
     NSURL* rootURL = server ? [classTDURLProtocol registerServer: server]
                             : [classTDURLProtocol rootURL];
     
@@ -116,10 +121,20 @@
     return self;
 }
 
-- (id) initWithServerPath: (NSString*)serverPath {
-    return [self initWithServerPath: serverPath options: NULL];
+- (id)initWithServerPath:(NSString *)serverPath options:(const struct TD_DatabaseManagerOptions *)options
+{
+    return [self initWithServerPath:serverPath options:options customHTTPHeaders:nil];
 }
 
+- (id) initWithServerPath: (NSString*)serverPath
+        customHTTPHeaders: (NSDictionary*)customHTTPHeaders {
+    return [self initWithServerPath: serverPath options: NULL customHTTPHeaders:customHTTPHeaders];
+}
+
+- (id) initWithServerPath:(NSString *)serverPath
+{
+    return [self initWithServerPath:serverPath customHTTPHeaders:nil];
+}
 
 - (id) initWithURL:(NSURL *)url {
     if (url)

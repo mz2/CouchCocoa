@@ -33,11 +33,17 @@ struct TD_DatabaseManagerOptions;
     @param serverPath  The filesystem path to the server directory. If it doesn't already exist it will be created. */
 - (id) initWithServerPath: (NSString*)serverPath;
 
+- (id) initWithServerPath: (NSString*)serverPath customHTTPHeaders: (NSDictionary*)customHTTPHeaders;
+
 /** Starts up a server that stores its data at the given path.
     @param serverPath  The filesystem path to the server directory. If it doesn't already exist it will be created.
     @param options  Option settings; can be used to open in read-only mode or to disable the replicator. */
 - (id) initWithServerPath: (NSString*)serverPath
                   options: (const struct TD_DatabaseManagerOptions*)options;
+
+- (id) initWithServerPath: (NSString*)serverPath
+                  options: (const struct TD_DatabaseManagerOptions*)options
+        customHTTPHeaders: (NSDictionary*)customHTTPHeaders;
 
 /** Inherited initializer, if you want to connect to a remote server for debugging purposes. */
 - (id) initWithURL: (NSURL*)url;
