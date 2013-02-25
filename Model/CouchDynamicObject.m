@@ -257,6 +257,8 @@ static Class classFromType(const char* propertyType) {
         case _C_ID:
             return [self impForGetterOfProperty: property ofClass: classFromType(propertyType)];
         case _C_INT:
+        case _C_LNG_LNG:
+        case _C_ULNG_LNG:
         case _C_SHT:
         case _C_USHT:
         case _C_CHR:
