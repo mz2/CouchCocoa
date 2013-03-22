@@ -22,7 +22,7 @@
 static NSString* const kLocalServerURL = @"http://127.0.0.1:5984/";
 
 
-int gCouchLogLevel = 4;
+int gCouchLogLevel = 1;
 
 
 @interface CouchServer ()
