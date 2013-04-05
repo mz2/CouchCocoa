@@ -18,15 +18,17 @@
     Additionally, a property's type can be a pointer to a CouchModel subclass. This provides references between model objects. The raw property value in the document must be a string whose value is interpreted as a document ID. */
 @interface CouchModel : CouchDynamicObject
 {
-    @private
+    @protected
+    NSMutableDictionary* _properties;   // Cached property values, including changed values
+    NSMutableSet* _changedNames;        // Names of properties that have been changed but not saved
+    bool _needsSave :1;
     CouchDocument* _document;
+
+    @private
     CFAbsoluteTime _changedTime;
     bool _autosaves :1;
     bool _isNew     :1;
-    bool _needsSave :1;
-
-    NSMutableDictionary* _properties;   // Cached property values, including changed values
-    NSMutableSet* _changedNames;        // Names of properties that have been changed but not saved
+    
     NSMutableDictionary* _changedAttachments;
 }
 
