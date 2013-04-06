@@ -151,7 +151,7 @@ static void setDoubleProperty(CouchDynamicObject *self, SEL _cmd, double value) 
 
 
 // Look up the encoded type of a property, and whether it's settable or readonly
-static const char* getPropertyType(objc_property_t property, BOOL *outIsSettable) {
+const char* getPropertyType(objc_property_t property, BOOL *outIsSettable) {
     *outIsSettable = YES;
     const char *result = "@";
     
@@ -178,7 +178,7 @@ static const char* getPropertyType(objc_property_t property, BOOL *outIsSettable
 
 
 // Look up a class's property by name, and find its type and which class declared it
-static BOOL getPropertyInfo(Class cls, 
+BOOL getPropertyInfo(Class cls, 
                             NSString *propertyName, 
                             BOOL setter,
                             Class *declaredInClass,
@@ -212,7 +212,7 @@ static BOOL getPropertyInfo(Class cls,
 }
 
 
-static Class classFromType(const char* propertyType) {
+Class classFromType(const char* propertyType) {
     size_t len = strlen(propertyType);
     if (propertyType[0] != _C_ID || propertyType[1] != '"' || propertyType[len-1] != '"')
         return NULL;
@@ -334,6 +334,7 @@ static Class classFromType(const char* propertyType) {
 // implemented by this class. The implementation should either call class_addMethod and return YES,
 // or return NO.
 + (BOOL)resolveInstanceMethod:(SEL)sel {
+    
     const char *name = sel_getName(sel);
     NSString* key;
     Class declaredInClass;

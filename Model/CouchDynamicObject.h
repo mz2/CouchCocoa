@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <objc/runtime.h>
 
 /** A generic class with runtime support for dynamic properties.
     You can subclass this and declare properties in the subclass without needing to implement them or make instance variables; simply note them as '@@dynamic' in the @@implementation.
@@ -45,5 +45,15 @@
 + (IMP) impForSetterOfProperty: (NSString*)property ofClass: (Class)propertyClass;
 + (IMP) impForGetterOfProperty: (NSString*)property ofType: (const char*)propertyType;
 + (IMP) impForSetterOfProperty: (NSString*)property ofType: (const char*)propertyType;
+
+const char* getPropertyType(objc_property_t property, BOOL *outIsSettable);
+
+BOOL getPropertyInfo(Class cls,
+                            NSString *propertyName,
+                            BOOL setter,
+                            Class *declaredInClass,
+                            const char* *propertyType);
+
+Class classFromType(const char* propertyType);
 
 @end
